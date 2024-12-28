@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  spring-boot-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: spring-boot-app
+    ports:
+      - "8080:8080"  # Optional, for local testing (HTTP)
+    networks:
+      - app-network
+
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile.nginx
+    container_name: nginx
+    ports:
+      - "443:443"  # HTTPS port
+    depends_on:
+      - spring-boot-app
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
